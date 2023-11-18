@@ -92,7 +92,7 @@ void main(void) {
 			// nast¹pi³a zmiana trybu - wciœniêto przycisk
 			USBSTK5515_ULED_setall(0x0F); // zgaszenie wszystkich diód
 			if (tryb_pracy == 1) {
-				// wypisanie informascji na wyœwietlaczu
+				// wypisanie informasdadsscji na wyœwietlaczu
 				oled_display_message("PROJEKT ZPS        ", "TRYB 1             ");
 				// zapalenie diody nr 1
 				USBSTK5515_ULED_on(0);
