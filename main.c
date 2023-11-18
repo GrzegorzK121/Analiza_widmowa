@@ -1,11 +1,10 @@
 /*
- * Projekt z przedmiotu Zastosowania Procesorów Sygna³owych
+ * Projekt z przedmiotu Zastosowania ProcesorÃ³w SygnaÅ‚owych
  * Szablon projektu dla DSP TMS320C5535
- * Grupa T1 1 Stencel Kaczorek
- */
 
 
-// Do³¹czenie wszelkich potrzebnych plików nag³ówkowych
+
+// DoÅ‚Ä…czenie wszelkich potrzebnych plikÃ³w nagÅ‚Ã³wkowych
 #include "usbstk5515.h"
 #include "usbstk5515_led.h"
 #include "aic3204.h"
@@ -43,56 +42,56 @@ int realis = 0;
 int imaginalis = 0;
 
 
-// Czêstotliwoœæ próbkowania (48 kHz)
+// CzÄ™stotliwoÅ›Ä‡ prÃ³bkowania (48 kHz)
 #define CZESTOTL_PROBKOWANIA 48000L
-// Wzmocnienie wejœcia w dB: 0 dla wejœcia liniowego, 30 dla mikrofonowego
+// Wzmocnienie wejÅ›cia w dB: 0 dla wejÅ›cia liniowego, 30 dla mikrofonowego
 #define WZMOCNIENIE_WEJSCIA_dB 30
 
 
-// G³ówna procedura programu
+// GÅ‚Ã³wna procedura programu
 
 void main(void) {
 
-	// Inicjalizacja uk³adu DSP
+	// Inicjalizacja ukÅ‚adu DSP
 	USBSTK5515_init();			// BSL
 	pll_frequency_setup(100);	// PLL 100 MHz
 	aic3204_hardware_init();	// I2C
-	aic3204_init();				// kodek dŸwiêku AIC3204
+	aic3204_init();				// kodek dÅºwiÄ™ku AIC3204
 	USBSTK5515_ULED_init();		// diody LED
 	SAR_init_pushbuttons();		// przyciski
-	oled_init();				// wyœwielacz LED 2x19 znaków
+	oled_init();				// wyÅ›wielacz LED 2x19 znakÃ³w
 
-	// ustawienie czêstotliwoœci próbkowania i wzmocnienia wejœcia
+	// ustawienie czÄ™stotliwoÅ›ci prÃ³bkowania i wzmocnienia wejÅ›cia
 	set_sampling_frequency_and_gain(CZESTOTL_PROBKOWANIA, WZMOCNIENIE_WEJSCIA_dB);
 
-	// wypisanie komunikatu na wyœwietlaczu
-	// 2 linijki po 19 znaków, tylko wielkie angielskie litery
+	// wypisanie komunikatu na wyÅ›wietlaczu
+	// 2 linijki po 19 znakÃ³w, tylko wielkie angielskie litery
 	oled_display_message("PROJEKT ZPS        ", "                   ");
 
 	// 'tryb_pracy' oznacza tryb pracy wybrany przyciskami
 	unsigned int tryb_pracy = 0;
 	unsigned int poprzedni_tryb_pracy = 99;
 
-	// zmienne do przechowywania wartoœci próbek
+	// zmienne do przechowywania wartoÅ›ci prÃ³bek
 	short lewy_wejscie, prawy_wejscie, lewy_wyjscie, prawy_wyjscie;
 
-	// Przetwarzanie próbek sygna³u w pêtli
+	// Przetwarzanie prÃ³bek sygnaÅ‚u w pÄ™tli
 	while (1) {
 
-		// odczyt próbek audio, zamiana na mono
+		// odczyt prÃ³bek audio, zamiana na mono
 		aic3204_codec_read(&lewy_wejscie, &prawy_wejscie);
 		short mono_wejscie = (lewy_wejscie >> 1) + (prawy_wejscie >> 1);
 
-		// sprawdzamy czy wciœniêto przycisk
-		// argument: maksymalna liczba obs³ugiwanych trybów
+		// sprawdzamy czy wciÅ›niÄ™to przycisk
+		// argument: maksymalna liczba obsÅ‚ugiwanych trybÃ³w
 		tryb_pracy = pushbuttons_read(4);
-		if (tryb_pracy == 0) // oba wciœniête - wyjœcie
+		if (tryb_pracy == 0) // oba wciÅ›niÄ™te - wyjÅ›cie
 			break;
 		else if (tryb_pracy != poprzedni_tryb_pracy) {
-			// nast¹pi³a zmiana trybu - wciœniêto przycisk
-			USBSTK5515_ULED_setall(0x0F); // zgaszenie wszystkich diód
+			// nastÄ…piÅ‚a zmiana trybu - wciÅ›niÄ™to przycisk
+			USBSTK5515_ULED_setall(0x0F); // zgaszenie wszystkich diÃ³d
 			if (tryb_pracy == 1) {
-				// wypisanie informasdadsscji na wyœwietlaczu
+				// wypisanie informasdadsscji na wyÅ›wietlaczu
 				oled_display_message("PROJEKT ZPS        ", "TRYB 1             ");
 				// zapalenie diody nr 1
 				USBSTK5515_ULED_on(0);
@@ -111,13 +110,13 @@ void main(void) {
 		}
 
 
-		// zadadnicze przetwarzanie w zale¿noœci od wybranego trybu pracy
+		// zadadnicze przetwarzanie w zaleÅ¼noÅ›ci od wybranego trybu pracy
 		
 		//ZADANIE 1 i 2
 		lewy_wyjscie = lewy_wejscie;
 		prawy_wyjscie = prawy_wejscie;
 	
-		mono_wejscie = TESTSIGNAL[index]; //t¹ linijkê siê komentuje do zadania 4
+		mono_wejscie = TESTSIGNAL[index]; //tÄ… linijkÄ™ siÄ™ komentuje do zadania 4
 		bufor[index] = mono_wejscie;
 		
 		bufor_okno[index] = mono_wejscie * okno[index];
@@ -143,7 +142,7 @@ void main(void) {
 		}
 		if(index==NBUF)
 		{
-				index = 0; // tutaj breakpoint aby zrobiæ wykres bufora i bufor_okno
+				index = 0; // tutaj breakpoint aby zrobiÄ‡ wykres bufora i bufor_okno
 		}
 
 
@@ -160,13 +159,13 @@ void main(void) {
 		
 
 
-		// zapisanie wartoœci na wyjœcie audio
+		// zapisanie wartoÅ›ci na wyjÅ›cie audio
 		aic3204_codec_write(lewy_wyjscie, prawy_wyjscie);
 
 	}
 
 
-	// zakoñczenie pracy - zresetowanie kodeka
+	// zakoÅ„czenie pracy - zresetowanie kodeka
 	aic3204_disable();
 	oled_display_message("KONIEC PRACY       ", "                   ");
 	while (1);
